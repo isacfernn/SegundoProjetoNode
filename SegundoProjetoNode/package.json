@@ -1,0 +1,11 @@
+{
+  "name": "segundoprojetonode",
+  "version": "1.0.0",
+  "description": "FACULDADE GRAN (https://faculdade.grancursosonline.com.br/)",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
