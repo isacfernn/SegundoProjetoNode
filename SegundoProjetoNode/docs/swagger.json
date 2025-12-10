@@ -1,0 +1,197 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API Estoque - Node.js",
+    "version": "1.0.0",
+    "description": "API simples de Produtos, Fornecedores e Associações (JWT protegido)"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor local"
+    }
+  ],
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "summary": "Login e geração de token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "usuario": { "type": "string", "example": "admin" },
+                  "senha": { "type": "string", "example": "1234" }
+                },
+                "required": ["usuario", "senha"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token gerado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Credenciais inválidas" }
+        }
+      }
+    },
+
+    "/produtos/lista": {
+      "get": {
+        "summary": "Lista todos os produtos",
+        "security": [{ "bearerAuth": [] }],
+        "responses": {
+          "200": { "description": "Lista de produtos" }
+        }
+      }
+    },
+    "/produtos/criar": {
+      "post": {
+        "summary": "Cria um produto",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": { "type": "string", "example": "TV LG" },
+                  "preco": { "type": "number", "example": 1999.99 }
+                },
+                "required": ["nome", "preco"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Produto criado" }
+        }
+      }
+    },
+    "/produtos/{id}": {
+      "put": {
+        "summary": "Atualiza um produto",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": { "type": "string" },
+                  "preco": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Produto atualizado" }
+        }
+      },
+      "delete": {
+        "summary": "Deleta um produto",
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Produto removido" }
+        }
+      }
+    },
+
+    "/fornecedores/lista": {
+      "get": {
+        "summary": "Lista todos os fornecedores",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Lista de fornecedores" } }
+      }
+    },
+    "/fornecedores/criar": {
+      "post": {
+        "summary": "Cria um fornecedor",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nome": { "type": "string", "example": "Fornecedor X" },
+                  "contato": { "type": "string", "example": "31999990000" }
+                },
+                "required": ["nome"]
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Fornecedor criado" } }
+      }
+    },
+
+    "/associar/lista": {
+      "get": {
+        "summary": "Lista associações produto↔fornecedor",
+        "security": [{ "bearerAuth": [] }],
+        "responses": { "200": { "description": "Lista de associações" } }
+      }
+    },
+    "/associar": {
+      "post": {
+        "summary": "Associa um produto a um fornecedor",
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "produto_id": { "type": "integer", "example": 1 },
+                  "fornecedor_id": { "type": "integer", "example": 1 }
+                },
+                "required": ["produto_id", "fornecedor_id"]
+              }
+            }
+          }
+        },
+        "responses": { "200": { "description": "Associação criada" } }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" }
+    }
+  }
+}
